@@ -1,5 +1,14 @@
+"use client";
+
+import { useState, useEffect } from 'react';
+
 export function Footer() {
-  const currentYear = new Date().getFullYear();
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   return (
     <footer className="border-t">
       <div className="container flex items-center justify-center py-4">
