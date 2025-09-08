@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart/cart-provider";
 import { CartSheet } from "@/components/cart/cart-sheet";
 import { cn } from "@/lib/utils";
-import { Menu, ShoppingCart, UtensilsCrossed, User, LogOut } from "lucide-react";
+import { Menu, ShoppingCart, UtensilsCrossed, User, LogOut, Package } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/use-auth";
 import { AuthDialog } from "../auth/auth-dialog";
@@ -80,6 +80,13 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/orders">
+                    <Package className="mr-2 h-4 w-4" />
+                    <span>My Orders</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -125,9 +132,14 @@ export function Header() {
                   </Link>
                 ))}
                  {user ? (
-                   <Button onClick={handleSignOut} variant="outline">
-                     Sign Out
-                   </Button>
+                   <>
+                    <Link href="/orders" className="text-lg font-medium text-neutral-600 hover:text-primary transition-colors">
+                      My Orders
+                    </Link>
+                    <Button onClick={handleSignOut} variant="outline">
+                      Sign Out
+                    </Button>
+                   </>
                   ) : (
                     <Button onClick={() => setIsAuthDialogOpen(true)} className="bg-neutral-900 text-white hover:bg-neutral-700">
                       Sign In
