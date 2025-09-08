@@ -30,6 +30,10 @@ export function Header() {
     { href: "/menu", label: "Menu" },
     { href: "/contact", label: "Contact" },
   ];
+  
+  if (user) {
+    navLinks.push({ href: "/orders", label: "My Orders" });
+  }
 
   const getInitials = (email?: string | null) => {
     return email ? email.charAt(0).toUpperCase() : '?';
@@ -80,13 +84,6 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/orders">
-                    <Package className="mr-2 h-4 w-4" />
-                    <span>My Orders</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
@@ -133,9 +130,6 @@ export function Header() {
                 ))}
                  {user ? (
                    <>
-                    <Link href="/orders" className="text-lg font-medium text-neutral-600 hover:text-primary transition-colors">
-                      My Orders
-                    </Link>
                     <Button onClick={handleSignOut} variant="outline">
                       Sign Out
                     </Button>
