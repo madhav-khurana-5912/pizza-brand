@@ -20,6 +20,10 @@ import { AiRecommendations } from "../ai/ai-recommendations";
 export function CartSheet() {
   const { cartItems, totalPrice, isSheetOpen, setIsSheetOpen, cartCount } = useCart();
 
+  const handleCheckout = () => {
+    setIsSheetOpen(false);
+  }
+
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
       <SheetContent className="flex w-full flex-col sm:max-w-lg">
@@ -45,8 +49,8 @@ export function CartSheet() {
                   <span>Total:</span>
                   <span>₹{totalPrice.toFixed(2)}</span>
                 </div>
-                <Button asChild className="w-full" size="lg">
-                  <Link href="#">Checkout</Link>
+                <Button asChild className="w-full" size="lg" onClick={handleCheckout}>
+                  <Link href="/checkout">Checkout</Link>
                 </Button>
             </SheetFooter>
           </>

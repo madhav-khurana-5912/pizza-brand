@@ -67,7 +67,7 @@ export function Sidebar() {
                 <p>₹{totalPrice.toFixed(2)}</p>
               </div>
                <Button asChild className="w-full bg-[#F2811D] hover:bg-[#F26E22] text-white">
-                  <Link href="#">Checkout</Link>
+                  <Link href="/checkout">Checkout</Link>
                 </Button>
             </div>
           ) : (
