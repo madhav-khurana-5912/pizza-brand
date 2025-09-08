@@ -26,9 +26,11 @@ export function CategoryFilter({
   // Find a representative image for each category (first item's image)
   const categoryImages = categories.map(category => {
     const firstItem = category.items[0];
+    // Assuming you have images in /public folder named after the category
+    const categoryImage = `/${category.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}.png`;
     return {
       name: category.name,
-      image: firstItem?.image || 'https://picsum.photos/200/200',
+      image: categoryImage,
       aiHint: firstItem?.aiHint || 'food category'
     }
   });
