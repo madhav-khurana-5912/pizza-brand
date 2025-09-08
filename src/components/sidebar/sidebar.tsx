@@ -57,14 +57,14 @@ export function Sidebar() {
                       <p className="font-medium">{item.name} (M)</p>
                       <p className="text-xs text-muted-foreground">+ Extra Cheese</p>
                     </div>
-                    <p className="font-medium">${item.price.toFixed(2)}</p>
+                    <p className="font-medium">₹{item.price.toFixed(2)}</p>
                   </div>
                 ))}
               </div>
               <Separator />
               <div className="flex justify-between items-center font-bold text-base">
                 <p>Total</p>
-                <p>${totalPrice.toFixed(2)}</p>
+                <p>₹{totalPrice.toFixed(2)}</p>
               </div>
                <Button asChild className="w-full bg-[#F2811D] hover:bg-[#F26E22] text-white">
                   <Link href="#">Checkout</Link>

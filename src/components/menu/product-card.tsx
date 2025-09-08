@@ -71,7 +71,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </CardContent>
       <CardFooter className="flex justify-between items-center mt-auto p-4">
         <p className="text-lg font-bold text-foreground">
-          ${product.price.toFixed(2)}
+          ₹{product.price.toFixed(2)}
         </p>
         <Button
           onClick={() => addToCart(product)}

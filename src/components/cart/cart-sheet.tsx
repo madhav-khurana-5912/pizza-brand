@@ -39,7 +39,7 @@ export function CartSheet() {
             <SheetFooter className="p-6 sm:flex-col sm:gap-4">
                 <div className="flex justify-between items-center w-full text-lg font-semibold">
                   <span>Total:</span>
-                  <span>${totalPrice.toFixed(2)}</span>
+                  <span>₹{totalPrice.toFixed(2)}</span>
                 </div>
                 <Button asChild className="w-full" size="lg">
                   <Link href="#">Checkout</Link>

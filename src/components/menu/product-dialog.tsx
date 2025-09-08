@@ -63,7 +63,7 @@ export function ProductDialog({
             
             <DialogFooter className="mt-auto pt-4">
               <div className="w-full flex justify-between items-center">
-                <p className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-primary">₹{product.price.toFixed(2)}</p>
                 <Button size="lg" onClick={() => {
                   addToCart(product);
                   setIsOpen(false);
