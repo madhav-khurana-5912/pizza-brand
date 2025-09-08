@@ -7,7 +7,7 @@ import { CartProvider } from '@/components/cart/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Slice & Spice',
+  title: 'Pizza Brand',
   description: 'Hot. Fresh. Unforgettable.',
 };
 

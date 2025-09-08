@@ -15,14 +15,14 @@ export function Footer() {
     <footer className="bg-[#F2811D] text-white">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between">
         <p className="text-sm mb-2 sm:mb-0">
-          &copy; {currentYear} Slice & Spice
+          &copy; {currentYear} Pizza Brand
         </p>
         <div className="flex items-center space-x-4">
             <Link href="#" className="hover:text-primary"><Facebook size={18} /></Link>
             <Link href="#" className="hover:text-primary"><Instagram size={18} /></Link>
             <Link href="#" className="hover:text-primary"><Twitter size={18} /></Link>
             <span className="hidden sm:inline">|</span>
-            <span className="text-sm">Contact: hello@sliceandspice.com</span>
+            <span className="text-sm">Contact: hello@pizzabrand.com</span>
         </div>
       </div>
     </footer>
