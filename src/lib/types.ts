@@ -11,7 +11,7 @@ export type Product = {
 
 export type Category = {
   name: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: string;
   items: Product[];
 };
 

@@ -1,10 +1,9 @@
 import type { Menu } from './types';
-import { Pizza, Utensils, GlassWater, Burger, Sandwich, CakeSlice, Soup } from 'lucide-react';
 
 export const menuData: Menu = [
   {
     name: 'Pizzas',
-    icon: Pizza,
+    icon: 'Pizza',
     items: [
       {
         id: 'pizza-1',
@@ -50,7 +49,7 @@ export const menuData: Menu = [
   },
   {
     name: 'Sides',
-    icon: Utensils,
+    icon: 'Utensils',
     items: [
       {
         id: 'side-1',
@@ -83,7 +82,7 @@ export const menuData: Menu = [
   },
     {
     name: 'Burgers',
-    icon: Burger,
+    icon: 'Beef',
     items: [
       {
         id: 'burger-1',
@@ -107,7 +106,7 @@ export const menuData: Menu = [
   },
   {
     name: 'Sandwiches',
-    icon: Sandwich,
+    icon: 'Sandwich',
     items: [
       {
         id: 'sandwich-1',
@@ -131,7 +130,7 @@ export const menuData: Menu = [
   },
   {
     name: 'Shakes',
-    icon: GlassWater,
+    icon: 'GlassWater',
     items: [
       {
         id: 'shake-1',
@@ -164,7 +163,7 @@ export const menuData: Menu = [
   },
   {
     name: 'Breads',
-    icon: CakeSlice,
+    icon: 'CakeSlice',
     items: [
       {
         id: 'bread-1',
@@ -179,7 +178,7 @@ export const menuData: Menu = [
   },
   {
     name: 'Pasta',
-    icon: Soup,
+    icon: 'Soup',
     items: [
       {
         id: 'pasta-1',

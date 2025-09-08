@@ -5,6 +5,7 @@ import type { Menu } from "@/lib/types";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import * as Icons from "lucide-react";
 
 interface MenuDisplayProps {
   menu: Menu;
@@ -23,7 +24,7 @@ export function MenuDisplay({ menu }: MenuDisplayProps) {
         <h2 className="text-xl font-bold font-headline mb-4">Categories</h2>
         <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 -mx-4 px-4">
           {menu.map((category) => {
-            const Icon = category.icon;
+            const Icon = Icons[category.icon as keyof typeof Icons] || Icons.HelpCircle;
             return (
               <Button
                 key={category.name}
