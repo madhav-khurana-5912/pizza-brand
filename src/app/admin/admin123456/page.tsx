@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { firestore } from "@/lib/firebase";
-import { collection, getDocs, query, orderBy, Timestamp } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import type { CartItem } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 type Order = {
   id: string;
@@ -27,12 +30,14 @@ type Order = {
   totalPrice: number;
   cartItems: CartItem[];
   createdAt: Timestamp;
+  status?: 'Active' | 'Cancelled';
 };
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!loading && user) {
@@ -52,6 +57,30 @@ export default function AdminPage() {
       setIsLoading(false);
     }
   }, [user, loading]);
+  
+  const handleCancelOrder = async (orderId: string) => {
+    const orderRef = doc(firestore, "orders", orderId);
+    try {
+      await updateDoc(orderRef, { status: 'Cancelled' });
+      setOrders(prevOrders => 
+        prevOrders.map(order => 
+          order.id === orderId ? { ...order, status: 'Cancelled' } : order
+        )
+      );
+      toast({
+        title: "Order Cancelled",
+        description: "The order has been successfully cancelled.",
+      });
+    } catch (error) {
+      console.error("Error cancelling order:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was a problem cancelling the order.",
+      });
+    }
+  };
+
 
   if (isLoading) {
     return <div className="container mx-auto py-12 text-center">Loading...</div>;
@@ -72,20 +101,23 @@ export default function AdminPage() {
                 <TableRow>
                   <TableHead>Order Date</TableHead>
                   <TableHead>Customer</TableHead>
-                  <TableHead>Contact</TableHead>
                   <TableHead>Address</TableHead>
                   <TableHead>Items</TableHead>
                   <TableHead className="text-right">Total</TableHead>
+                  <TableHead className="text-center">Status</TableHead>
+                  <TableHead className="text-center">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {orders.map((order) => (
-                  <TableRow key={order.id}>
+                  <TableRow key={order.id} className={cn(order.status === 'Cancelled' && 'text-muted-foreground bg-muted/50')}>
                     <TableCell>
                       {new Date(order.createdAt.seconds * 1000).toLocaleString()}
                     </TableCell>
-                    <TableCell>{order.name}</TableCell>
-                    <TableCell>{order.phone}</TableCell>
+                    <TableCell>
+                        <div>{order.name}</div>
+                        <div>{order.phone}</div>
+                    </TableCell>
                     <TableCell>{`${order.address}, ${order.city}, ${order.state} ${order.zip}`}</TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
@@ -98,6 +130,21 @@ export default function AdminPage() {
                     </TableCell>
                     <TableCell className="text-right font-medium">
                       ₹{order.totalPrice.toFixed(2)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                        <Badge variant={order.status === 'Cancelled' ? 'destructive' : 'secondary'}>
+                          {order.status || 'Active'}
+                        </Badge>
+                    </TableCell>
+                    <TableCell className="text-center">
+                        <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => handleCancelOrder(order.id)}
+                            disabled={order.status === 'Cancelled'}
+                        >
+                            Cancel
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))}
