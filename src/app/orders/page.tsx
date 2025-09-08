@@ -10,12 +10,8 @@ import type { CartItem } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'My Orders',
-  description: 'View your order history.',
-};
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type Order = {
   id: string;
