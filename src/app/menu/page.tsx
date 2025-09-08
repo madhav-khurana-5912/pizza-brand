@@ -1,6 +1,7 @@
 import { menuData } from '@/lib/data';
 import { MenuDisplay } from '@/components/menu/menu-display';
 import type { Metadata } from 'next';
+import { WednesdayOffers } from '@/components/layout/offers';
 
 export const metadata: Metadata = {
   title: 'Menu',
@@ -9,8 +10,13 @@ export const metadata: Metadata = {
 
 export default function MenuPage() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <MenuDisplay menu={menuData} />
-    </div>
+    <>
+      <div className="overflow-x-hidden">
+        <WednesdayOffers />
+      </div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <MenuDisplay menu={menuData} />
+      </div>
+    </>
   );
 }
