@@ -19,7 +19,7 @@ export function Hero() {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
         <div className="max-w-2xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Order Food & Groceries
+            Order Food
           </h1>
           <p className="text-lg md:text-xl text-primary-foreground/90 mb-8">
             Discover the best restaurants and stores near you.
