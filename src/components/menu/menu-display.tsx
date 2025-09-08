@@ -13,37 +13,22 @@ interface MenuDisplayProps {
 export function MenuDisplay({ menu }: MenuDisplayProps) {
   const [selectedCategory, setSelectedCategory] = useState("Pizzas");
 
-  const categories = ["All", "Classic", "Veggie", "Meat Lovers", "Specials"];
+  // This is a simplified filtering logic.
+  // In a real app, you'd likely have a more robust way to handle categories.
+  const categories = menu.map(cat => cat.name);
+  const itemsToDisplay = selectedCategory === 'All' 
+    ? menu.flatMap(cat => cat.items)
+    : menu.find(cat => cat.name === selectedCategory)?.items || [];
 
-  // Note: The filtering logic here is simplified.
-  // A real app would have better category mapping.
-  const filteredItems = menu
-    .find(cat => cat.name === 'Pizzas')
-    ?.items || [];
 
   return (
     <section>
       <div className="flex flex-col sm:flex-row justify-between items-baseline mb-6">
-        <h2 className="text-2xl font-semibold mb-4 sm:mb-0">Popular Categories</h2>
-        <div className="flex items-center gap-2 overflow-x-auto pb-2">
-           {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                onClick={() => setSelectedCategory(category)}
-                className={cn(
-                  "rounded-full",
-                   selectedCategory === category ? 'bg-accent text-accent-foreground' : 'bg-secondary'
-                )}
-              >
-                {category}
-              </Button>
-            ))}
-        </div>
+        <h2 className="text-3xl font-bold mb-4 sm:mb-0">Order our best food options</h2>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredItems.map((product) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {itemsToDisplay.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
