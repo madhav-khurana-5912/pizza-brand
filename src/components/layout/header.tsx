@@ -1,50 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { Pizza, ShoppingCart } from "lucide-react";
+import { usePathname } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart/cart-provider";
 import { CartSheet } from "@/components/cart/cart-sheet";
+import { cn } from "@/lib/utils";
 
 export function Header() {
-  const { cartCount, setIsSheetOpen } = useCart();
+  const { setIsSheetOpen } = useCart();
+  const pathname = usePathname();
+
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/menu", label: "Menu" },
+    { href: "/cart", label: "Cart" },
+    { href: "/contact", label: "Contact" },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-card backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
-        <Link href="/" className="mr-6 flex items-center space-x-2">
-          <Pizza className="h-6 w-6 text-primary" />
-          <span className="font-bold font-headline text-primary-foreground">Pizza Brand</span>
+    <header className="sticky top-0 z-50 w-full bg-[#F2811D] text-white shadow-md">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-20 items-center justify-between">
+        <Link href="/" className="text-2xl font-bold font-headline">
+          Slice & Spice
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          <Link
-            href="/"
-            className="transition-colors hover:text-primary-foreground/80 text-primary-foreground/60"
-          >
-            Menu
-          </Link>
-          <Link
-            href="/contact"
-            className="transition-colors hover:text-primary-foreground/80 text-primary-foreground/60"
-          >
-            Contact
-          </Link>
+        <nav className="hidden md:flex items-center gap-2">
+          {navLinks.map((link) => (
+            <Button key={link.href} variant="ghost" asChild 
+              className={cn("hover:bg-white/20", { "bg-primary text-white": pathname === link.href || (link.href === '/menu' && pathname === '/') })}>
+              <Link href={link.href === '/cart' ? '#' : link.href} onClick={link.href === '/cart' ? () => setIsSheetOpen(true) : undefined}>
+                {link.label}
+              </Link>
+            </Button>
+          ))}
         </nav>
-        <div className="flex flex-1 items-center justify-end">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="relative text-primary-foreground hover:bg-card/20 hover:text-primary-foreground"
-            onClick={() => setIsSheetOpen(true)}
-            aria-label={`Open cart with ${cartCount} items`}
-          >
-            <ShoppingCart className="h-5 w-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground">
-                {cartCount}
-              </span>
-            )}
-          </Button>
+        <div className="md:hidden">
+          {/* Mobile menu could be implemented here */}
         </div>
       </div>
       <CartSheet />

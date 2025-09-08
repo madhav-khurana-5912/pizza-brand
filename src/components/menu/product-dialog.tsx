@@ -13,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart/cart-provider";
 import { Badge } from "@/components/ui/badge";
-import { AiCustomization } from "@/components/ai/ai-customization";
 
 interface ProductDialogProps {
   product: Product;
@@ -62,15 +61,15 @@ export function ProductDialog({
               </div>
             )}
             
-            {product.category === 'Pizzas' && <AiCustomization product={product} />}
-
             <DialogFooter className="mt-auto pt-4">
               <div className="w-full flex justify-between items-center">
                 <p className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</p>
                 <Button size="lg" onClick={() => {
                   addToCart(product);
                   setIsOpen(false);
-                }}>
+                }}
+                className="bg-[#F2811D] hover:bg-[#F26E22] text-white"
+                >
                   Add to Cart
                 </Button>
               </div>

@@ -5,51 +5,48 @@ import type { Menu } from "@/lib/types";
 import { ProductCard } from "./product-card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import * as Icons from "lucide-react";
 
 interface MenuDisplayProps {
   menu: Menu;
 }
 
 export function MenuDisplay({ menu }: MenuDisplayProps) {
-  const [selectedCategory, setSelectedCategory] = useState(menu[0].name);
+  const [selectedCategory, setSelectedCategory] = useState("Pizzas");
 
-  const selectedCategoryData = menu.find(
-    (category) => category.name === selectedCategory
-  );
+  const categories = ["All", "Classic", "Veggie", "Meat Lovers", "Specials"];
+
+  // Note: The filtering logic here is simplified.
+  // A real app would have better category mapping.
+  const filteredItems = menu
+    .find(cat => cat.name === 'Pizzas')
+    ?.items || [];
 
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      <aside className="md:w-1/4 lg:w-1/5">
-        <h2 className="text-xl font-bold font-headline mb-4">Categories</h2>
-        <div className="flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0 -mx-4 px-4">
-          {menu.map((category) => {
-            const Icon = Icons[category.icon as keyof typeof Icons] || Icons.HelpCircle;
-            return (
+    <section>
+      <div className="flex flex-col sm:flex-row justify-between items-baseline mb-6">
+        <h2 className="text-2xl font-bold mb-4 sm:mb-0">Popular Categories</h2>
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
+           {categories.map((category) => (
               <Button
-                key={category.name}
-                variant={selectedCategory === category.name ? "default" : "ghost"}
+                key={category}
+                variant={selectedCategory === category ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category)}
                 className={cn(
-                  "justify-start whitespace-nowrap",
-                  selectedCategory === category.name ? "bg-primary text-primary-foreground" : "text-foreground"
-                  )}
-                onClick={() => setSelectedCategory(category.name)}
+                  "rounded-full",
+                   selectedCategory === category ? 'bg-accent text-accent-foreground' : 'bg-secondary'
+                )}
               >
-                <Icon className="mr-2 h-5 w-5" />
-                {category.name}
+                {category}
               </Button>
-            );
-          })}
+            ))}
         </div>
-      </aside>
-      <section className="flex-1">
-        <h2 className="text-3xl font-bold font-headline mb-6">{selectedCategory}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {selectedCategoryData?.items.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-    </div>
+      </div>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredItems.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </section>
   );
 }
