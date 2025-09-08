@@ -236,21 +236,6 @@ export const menuData: Menu = [
     ],
   },
   {
-    name: 'Desserts',
-    icon: 'CakeSlice',
-    items: [
-      {
-            id: 'dessert-1',
-            name: 'Chocolava Cake',
-            description: 'Warm, gooey chocolate lava cake.',
-            price: 60,
-            image: 'https://picsum.photos/600/400',
-            category: 'Desserts',
-            aiHint: 'lava cake',
-      },
-    ]
-  },
-  {
       name: 'Shakes & Mocktails',
       icon: 'GlassWater',
       items: [
