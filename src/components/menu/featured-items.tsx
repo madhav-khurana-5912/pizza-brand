@@ -1,34 +1,36 @@
+"use client";
+
+import { useState } from "react";
 import type { Menu } from "@/lib/types";
 import { ProductCard } from "./product-card";
+import { CategoryFilter } from "./category-filter";
 
 interface FeaturedItemsProps {
   menu: Menu;
 }
 
 export function FeaturedItems({ menu }: FeaturedItemsProps) {
+  const [selectedCategory, setSelectedCategory] = useState("Pizzas");
+
+  const itemsToDisplay =
+    menu.find((cat) => cat.name === selectedCategory)?.items || [];
+  
+  const topItems = [...itemsToDisplay]
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 3);
+
   return (
     <section>
-      {menu.map((category) => {
-        // Get top 3 most expensive items
-        const topItems = [...category.items]
-          .sort((a, b) => b.price - a.price)
-          .slice(0, 3);
-
-        if (topItems.length === 0) {
-          return null;
-        }
-
-        return (
-          <div key={category.name} className="mb-12">
-            <h3 className="text-3xl font-bold mb-6 border-l-4 border-primary pl-4">{category.name}</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {topItems.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        );
-      })}
+      <CategoryFilter
+        categories={menu}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+      />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        {topItems.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </section>
   );
 }
