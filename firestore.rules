@@ -1,8 +1,9 @@
+
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow users to read and write only to their own cart document.
-    // The cart document ID must be the same as the user's UID.
+    // Users can only read and write to their own cart
     match /carts/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
