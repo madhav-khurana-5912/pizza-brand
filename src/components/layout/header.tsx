@@ -10,7 +10,6 @@ import { Menu, ShoppingCart, UtensilsCrossed, User, LogOut } from "lucide-react"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/use-auth";
 import { AuthDialog } from "../auth/auth-dialog";
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +23,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 export function Header() {
   const { cartCount, setIsSheetOpen, clearCart } = useCart();
   const pathname = usePathname();
-  const { user, signOut: firebaseSignOut } = useAuth();
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const { user, signOut: firebaseSignOut, isAuthDialogOpen, setIsAuthDialogOpen } = useAuth();
 
   const navLinks = [
     { href: "/", label: "Home" },

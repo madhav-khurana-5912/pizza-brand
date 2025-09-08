@@ -8,9 +8,21 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '../cart/cart-provider';
 import Link from 'next/link';
 import { Separator } from '../ui/separator';
+import { useAuth } from '@/hooks/use-auth';
+import { useRouter } from 'next/navigation';
 
 export function Sidebar() {
   const { cartItems, totalPrice } = useCart();
+  const { user, setIsAuthDialogOpen } = useAuth();
+  const router = useRouter();
+
+  const handleCheckout = () => {
+    if (user) {
+      router.push('/checkout');
+    } else {
+      setIsAuthDialogOpen(true);
+    }
+  };
 
   return (
     <aside className="space-y-6">
@@ -66,8 +78,8 @@ export function Sidebar() {
                 <p>Total</p>
                 <p>₹{totalPrice.toFixed(2)}</p>
               </div>
-               <Button asChild className="w-full bg-[#F2811D] hover:bg-[#F26E22] text-white">
-                  <Link href="/checkout">Checkout</Link>
+               <Button onClick={handleCheckout} className="w-full bg-[#F2811D] hover:bg-[#F26E22] text-white">
+                  Checkout
                 </Button>
             </div>
           ) : (

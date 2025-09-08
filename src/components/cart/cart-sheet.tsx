@@ -16,12 +16,21 @@ import { Separator } from "@/components/ui/separator";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { AiRecommendations } from "../ai/ai-recommendations";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 
 export function CartSheet() {
   const { cartItems, totalPrice, isSheetOpen, setIsSheetOpen, cartCount } = useCart();
+  const { user, setIsAuthDialogOpen } = useAuth();
+  const router = useRouter();
 
   const handleCheckout = () => {
-    setIsSheetOpen(false);
+    if (user) {
+      setIsSheetOpen(false);
+      router.push("/checkout");
+    } else {
+      setIsAuthDialogOpen(true);
+    }
   }
 
   return (
@@ -49,8 +58,8 @@ export function CartSheet() {
                   <span>Total:</span>
                   <span>₹{totalPrice.toFixed(2)}</span>
                 </div>
-                <Button asChild className="w-full" size="lg" onClick={handleCheckout}>
-                  <Link href="/checkout">Checkout</Link>
+                <Button onClick={handleCheckout} className="w-full" size="lg">
+                  Checkout
                 </Button>
             </SheetFooter>
           </>
