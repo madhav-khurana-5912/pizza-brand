@@ -22,9 +22,9 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar";
 
 export function Header() {
-  const { cartCount, setIsSheetOpen } = useCart();
+  const { cartCount, setIsSheetOpen, clearCart } = useCart();
   const pathname = usePathname();
-  const { user, signOut } = useAuth();
+  const { user, signOut: firebaseSignOut } = useAuth();
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
 
   const navLinks = [
@@ -37,6 +37,10 @@ export function Header() {
     return email ? email.charAt(0).toUpperCase() : '?';
   };
 
+  const handleSignOut = async () => {
+    await firebaseSignOut();
+    clearCart();
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white text-neutral-800 shadow-md">
@@ -78,7 +82,7 @@ export function Header() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={signOut}>
+                <DropdownMenuItem onClick={handleSignOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
@@ -119,7 +123,7 @@ export function Header() {
                   </Link>
                 ))}
                  {user ? (
-                   <Button onClick={signOut} variant="outline">
+                   <Button onClick={handleSignOut} variant="outline">
                      Sign Out
                    </Button>
                   ) : (
