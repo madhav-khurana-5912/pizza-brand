@@ -42,7 +42,7 @@ export function ProductDialog({
           </div>
           <div className="flex flex-col">
             <DialogHeader>
-              <DialogTitle className="text-3xl font-headline">{product.name}</DialogTitle>
+              <DialogTitle className="text-3xl font-semibold">{product.name}</DialogTitle>
               <DialogDescription className="text-base pt-2">
                 {product.description}
               </DialogDescription>

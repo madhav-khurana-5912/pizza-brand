@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section className="bg-accent text-accent-foreground rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
       <div className="md:w-1/2 text-center md:text-left">
-        <h1 className="text-4xl md:text-5xl font-bold font-headline mb-4">
+        <h1 className="text-4xl md:text-5xl font-semibold mb-4">
           Hot. Fresh. Unforgettable.
         </h1>
         <p className="text-lg mb-8">

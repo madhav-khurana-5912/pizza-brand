@@ -24,7 +24,7 @@ export function MenuDisplay({ menu }: MenuDisplayProps) {
   return (
     <section>
       <div className="flex flex-col sm:flex-row justify-between items-baseline mb-6">
-        <h2 className="text-2xl font-bold mb-4 sm:mb-0">Popular Categories</h2>
+        <h2 className="text-2xl font-semibold mb-4 sm:mb-0">Popular Categories</h2>
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
            {categories.map((category) => (
               <Button
