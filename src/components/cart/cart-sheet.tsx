@@ -15,15 +15,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { AiRecommendations } from "../ai/ai-recommendations";
 
 export function CartSheet() {
   const { cartItems, totalPrice, isSheetOpen, setIsSheetOpen, cartCount } = useCart();
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-      <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
+      <SheetContent className="flex w-full flex-col sm:max-w-lg">
         <SheetHeader className="px-6 pt-6">
-          <SheetTitle>Your Cart</SheetTitle>
+          <SheetTitle>Your Cart ({cartCount})</SheetTitle>
         </SheetHeader>
         
         {cartItems.length > 0 ? (
@@ -35,6 +36,9 @@ export function CartSheet() {
                 ))}
               </div>
             </ScrollArea>
+            <div className="px-6 py-4">
+              <AiRecommendations />
+            </div>
             <Separator />
             <SheetFooter className="p-6 sm:flex-col sm:gap-4">
                 <div className="flex justify-between items-center w-full text-lg font-semibold">
@@ -53,7 +57,7 @@ export function CartSheet() {
             <SheetDescription>
               Looks like you haven't added anything to your cart yet.
             </SheetDescription>
-            <Button onClick={() => setIsSheetOpen(false)}>Start an order</Button>
+            <Button onClick={() => setIsSheetOpen(false)} className="bg-[#F2811D] hover:bg-[#F26E22] text-white">Start an order</Button>
           </div>
         )}
       </SheetContent>

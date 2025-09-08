@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/components/cart/cart-provider";
 import { Badge } from "@/components/ui/badge";
+import { AiCustomization } from "../ai/ai-customization";
 
 interface ProductDialogProps {
   product: Product;
@@ -60,6 +61,8 @@ export function ProductDialog({
                 </div>
               </div>
             )}
+
+            <AiCustomization product={product} />
             
             <DialogFooter className="mt-auto pt-4">
               <div className="w-full flex justify-between items-center">
