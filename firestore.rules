@@ -1,18 +1,18 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Carts: Users can only read and write to their own cart.
     match /carts/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Orders:
-    // - Users can create their own orders.
-    // - Users can read their own orders.
-    // - Admin can read all orders.
     match /orders/{orderId} {
       allow create: if request.auth != null;
-      allow read: if request.auth != null && (request.auth.uid == resource.data.userId || request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID');
+      // Admin can read any individual order
+      allow read: if request.auth != null && request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID';
+    }
+
+    match /orders/{orderId} {
+       // Admin can list all orders
       allow list: if request.auth != null && request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID';
     }
   }
