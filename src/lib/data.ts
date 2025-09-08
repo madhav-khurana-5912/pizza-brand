@@ -236,45 +236,18 @@ export const menuData: Menu = [
     ],
   },
   {
-    name: 'Sides',
-    icon: 'Utensils',
+    name: 'Desserts',
+    icon: 'CakeSlice',
     items: [
-        {
-            id: 'side-1',
-            name: 'French Fries',
-            description: 'Classic salted french fries.',
-            price: 70,
-            image: 'https://picsum.photos/600/400',
-            category: 'Sides',
-            aiHint: 'french fries',
-        },
-        {
-            id: 'side-2',
-            name: 'Peri Peri Masala Fries',
-            description: 'Fries with a spicy peri peri kick.',
-            price: 80,
-            image: 'https://picsum.photos/600/400',
-            category: 'Sides',
-            aiHint: 'masala fries',
-        },
-        {
-            id: 'side-3',
-            name: 'Zingy Parcel',
-            description: 'A zesty, crunchy parcel.',
-            price: 50,
-            image: 'https://picsum.photos/600/400',
-            category: 'Sides',
-            aiHint: 'zingy parcel',
-        },
-        {
-            id: 'side-4',
+      {
+            id: 'dessert-1',
             name: 'Chocolava Cake',
             description: 'Warm, gooey chocolate lava cake.',
             price: 60,
             image: 'https://picsum.photos/600/400',
-            category: 'Sides',
+            category: 'Desserts',
             aiHint: 'lava cake',
-        },
+      },
     ]
   },
   {
