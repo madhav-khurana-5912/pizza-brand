@@ -27,7 +27,7 @@ export function Header() {
         <nav className="hidden md:flex items-center gap-2">
           {navLinks.map((link) => (
             <Button key={link.href} variant="ghost" asChild 
-              className={cn("hover:bg-foreground hover:text-background", { "bg-transparent text-white underline": pathname === link.href })}>
+              className={cn("hover:bg-foreground hover:text-background", { "bg-transparent text-white font-bold": pathname === link.href })}>
               <Link href={link.href === '/cart' ? '#' : link.href} onClick={link.href === '/cart' ? () => setIsSheetOpen(true) : undefined}>
                 {link.label}
               </Link>
