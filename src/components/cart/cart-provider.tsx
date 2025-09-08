@@ -5,7 +5,7 @@ import type { CartItem, Product } from '@/lib/types';
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/hooks/use-auth';
 import { firestore } from '@/lib/firebase';
-import { doc, getDoc, setDoc, onSnapshot, collection, writeBatch } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, collection } from 'firebase/firestore';
 
 type CartContextType = {
   cartItems: CartItem[];
@@ -26,84 +26,52 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
-  const [isSyncing, setIsSyncing] = useState(false);
-
-  const getCartRef = useCallback((uid: string) => {
-    return doc(collection(firestore, 'carts'), uid);
-  }, []);
   
-  const mergeCarts = useCallback(async (localCart: CartItem[], uid: string) => {
-    if (isSyncing) return;
-    setIsSyncing(true);
-
-    try {
-        const cartRef = getCartRef(uid);
-        const cartSnap = await getDoc(cartRef);
-        const remoteCart: CartItem[] = cartSnap.exists() ? cartSnap.data().items : [];
-
-        const mergedCart = [...remoteCart];
-
-        localCart.forEach(localItem => {
-            const remoteItemIndex = mergedCart.findIndex(item => item.id === localItem.id);
-            if (remoteItemIndex > -1) {
-                mergedCart[remoteItemIndex].quantity += localItem.quantity;
-            } else {
-                mergedCart.push(localItem);
-            }
-        });
-        
-        await setDoc(cartRef, { items: mergedCart });
-        setCartItems(mergedCart);
-    } catch(error) {
-        console.error("Error merging carts:", error);
-    } finally {
-        setIsSyncing(false);
-    }
-}, [getCartRef, isSyncing]);
-
-useEffect(() => {
+  // Effect to sync cart with Firestore
+  useEffect(() => {
+    let unsubscribe: () => void = () => {};
+    
     if (user) {
-      const localCart = [...cartItems];
-      setCartItems([]); // Clear local cart immediately for better UX
-      
-      if (localCart.length > 0) {
-        mergeCarts(localCart, user.uid);
-      }
-
-      const cartRef = getCartRef(user.uid);
-      const unsubscribe = onSnapshot(cartRef, (doc) => {
-        if (doc.exists()) {
-          setCartItems(doc.data().items || []);
+      const cartRef = doc(firestore, 'carts', user.uid);
+      unsubscribe = onSnapshot(cartRef, (snapshot) => {
+        if (snapshot.exists()) {
+          setCartItems(snapshot.data().items || []);
         } else {
-          setCartItems([]);
+          // If no remote cart exists, create one with the local cart items
+          setDoc(cartRef, { items: cartItems });
         }
+      }, (error) => {
+        console.error("Firestore snapshot error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not sync your cart.",
+        });
       });
-      return () => unsubscribe();
     } else {
-      // User logged out, retain local cart for now, or clear it.
-      // Clearing is simpler to avoid complexity when they log back in.
+      // If user logs out, clear the cart.
       setCartItems([]);
     }
-  }, [user, getCartRef, mergeCarts]);
 
-  const updateRemoteCart = async (newCartItems: CartItem[]) => {
-    if (user && !isSyncing) {
-        setIsSyncing(true);
-        try {
-            const cartRef = getCartRef(user.uid);
-            await setDoc(cartRef, { items: newCartItems });
-        } catch(error) {
-            console.error("Error updating firestore cart: ", error);
-            toast({
-              variant: "destructive",
-              title: "Error",
-              description: "Could not update your cart. Please try again."
-            })
-        } finally {
-            setIsSyncing(false);
-        }
+    return () => unsubscribe();
+  }, [user, toast]);
+
+
+  const updateRemoteCart = useCallback(async (newCartItems: CartItem[]) => {
+    if (user) {
+      try {
+        const cartRef = doc(firestore, 'carts', user.uid);
+        await setDoc(cartRef, { items: newCartItems }, { merge: true });
+      } catch (error) {
+        console.error("Error updating firestore cart: ", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not update your cart. Please try again."
+        });
+      }
     }
-  };
+  }, [user, toast]);
 
   const addToCart = (product: Product) => {
     const updatedCart = [...cartItems];
@@ -117,7 +85,7 @@ useEffect(() => {
     
     setCartItems(updatedCart);
     if (user) {
-        updateRemoteCart(updatedCart);
+      updateRemoteCart(updatedCart);
     }
 
     toast({
@@ -150,9 +118,10 @@ useEffect(() => {
   };
   
   const clearCart = () => {
-    setCartItems([]);
+    const updatedCart: CartItem[] = [];
+    setCartItems(updatedCart);
     if (user) {
-      updateRemoteCart([]);
+      updateRemoteCart(updatedCart);
     }
   }
 
