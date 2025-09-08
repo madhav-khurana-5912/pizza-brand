@@ -40,16 +40,16 @@ export function ProductCard({ product }: ProductCardProps) {
             data-ai-hint={product.aiHint}
           />
         </div>
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-2 flex-grow">
           <CardTitle className="text-lg font-semibold">{product.name}</CardTitle>
           <CardDescription className="text-sm text-gray-600 line-clamp-2 h-[40px]">
             {product.description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow">
+        <CardContent>
           {/* Content can be added here if needed */}
         </CardContent>
-        <CardFooter className="flex justify-between items-center p-4">
+        <CardFooter className="flex justify-between items-center p-4 mt-auto">
           <p className="text-lg font-bold text-foreground">
             ₹{product.price.toFixed(2)}
           </p>
