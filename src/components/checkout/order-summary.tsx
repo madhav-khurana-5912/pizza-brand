@@ -7,9 +7,6 @@ import Image from "next/image";
 
 export function OrderSummary() {
   const { cartItems, totalPrice } = useCart();
-  const taxRate = 0.08; // 8% tax
-  const taxes = totalPrice * taxRate;
-  const finalTotal = totalPrice + taxes;
 
   return (
     <Card className="shadow-lg">
@@ -39,18 +36,9 @@ export function OrderSummary() {
             </div>
             <Separator />
             <div className="space-y-2 text-base">
-              <div className="flex justify-between">
-                <span>Subtotal</span>
-                <span>₹{totalPrice.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Taxes ({(taxRate * 100).toFixed(0)}%)</span>
-                <span>₹{taxes.toFixed(2)}</span>
-              </div>
-              <Separator />
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>₹{finalTotal.toFixed(2)}</span>
+                <span>₹{totalPrice.toFixed(2)}</span>
               </div>
             </div>
           </div>
