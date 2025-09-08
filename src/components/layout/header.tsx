@@ -7,7 +7,7 @@ import { useCart } from "@/components/cart/cart-provider";
 import { CartSheet } from "@/components/cart/cart-sheet";
 import { cn } from "@/lib/utils";
 import { Menu, ShoppingCart, UtensilsCrossed, User, LogOut } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "@/hooks/use-auth";
 import { AuthDialog } from "../auth/auth-dialog";
 import { useState } from "react";
@@ -108,8 +108,12 @@ export function Header() {
                 <span className="sr-only">Open menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-3/4 bg-white pt-16">
-              <nav className="flex flex-col gap-6 px-4">
+            <SheetContent side="left" className="w-3/4 bg-white pt-10">
+              <SheetHeader className="px-4 text-left">
+                <SheetTitle>Menu</SheetTitle>
+                <SheetDescription>Navigate through our app</SheetDescription>
+              </SheetHeader>
+              <nav className="flex flex-col gap-6 px-4 mt-6">
                 {navLinks.map((link) => (
                   <Link 
                     key={link.href} 
