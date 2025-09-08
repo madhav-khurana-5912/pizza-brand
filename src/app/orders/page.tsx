@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useState } from "react";
@@ -6,20 +7,12 @@ import { collection, getDocs, query, where, orderBy, Timestamp } from "firebase/
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import type { CartItem } from "@/lib/types";
+import type { CartItem, Order, OrderStatus } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-type Order = {
-  id: string;
-  totalPrice: number;
-  cartItems: CartItem[];
-  createdAt: Timestamp;
-  status?: 'Active' | 'Cancelled';
-};
 
 export default function OrdersPage() {
   const { user, loading } = useAuth();
@@ -48,6 +41,20 @@ export default function OrdersPage() {
       setIsLoading(false);
     }
   }, [user, loading]);
+  
+  const getStatusBadgeVariant = (status?: OrderStatus) => {
+    switch (status) {
+      case 'Cancelled':
+        return 'destructive';
+      case 'Out for Delivery':
+        return 'default';
+      case 'Ready':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+
 
   if (isLoading) {
     return <div className="container mx-auto py-12 text-center">Loading your orders...</div>;
@@ -78,7 +85,7 @@ export default function OrdersPage() {
                             </p>
                         </div>
                         <div className="text-right">
-                           <Badge variant={order.status === 'Cancelled' ? 'destructive' : 'secondary'}>
+                           <Badge variant={getStatusBadgeVariant(order.status)}>
                              {order.status || 'Active'}
                            </Badge>
                            <p className="text-lg font-bold mt-1">₹{order.totalPrice.toFixed(2)}</p>

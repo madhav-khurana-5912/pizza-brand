@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useState } from "react";
@@ -14,24 +15,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import type { CartItem } from "@/lib/types";
-import { Button } from "@/components/ui/button";
+import type { CartItem, Order, OrderStatus } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
-type Order = {
-  id: string;
-  name: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  totalPrice: number;
-  cartItems: CartItem[];
-  createdAt: Timestamp;
-  status?: 'Active' | 'Cancelled';
-};
 
 export default function AdminPage() {
   const { user, loading } = useAuth();
@@ -58,28 +53,43 @@ export default function AdminPage() {
     }
   }, [user, loading]);
   
-  const handleCancelOrder = async (orderId: string) => {
+  const handleUpdateStatus = async (orderId: string, status: OrderStatus) => {
     const orderRef = doc(firestore, "orders", orderId);
     try {
-      await updateDoc(orderRef, { status: 'Cancelled' });
+      await updateDoc(orderRef, { status: status });
       setOrders(prevOrders => 
         prevOrders.map(order => 
-          order.id === orderId ? { ...order, status: 'Cancelled' } : order
+          order.id === orderId ? { ...order, status: status } : order
         )
       );
       toast({
-        title: "Order Cancelled",
-        description: "The order has been successfully cancelled.",
+        title: "Order Updated",
+        description: `The order status has been changed to ${status}.`,
       });
     } catch (error) {
-      console.error("Error cancelling order:", error);
+      console.error("Error updating order status:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "There was a problem cancelling the order.",
+        description: "There was a problem updating the order.",
       });
     }
   };
+  
+  const getStatusBadgeVariant = (status?: OrderStatus) => {
+    switch (status) {
+      case 'Cancelled':
+        return 'destructive';
+      case 'Out for Delivery':
+        return 'default';
+      case 'Ready':
+        return 'secondary';
+      default:
+        return 'outline';
+    }
+  };
+  
+  const orderStatuses: OrderStatus[] = ['Active', 'Ready', 'Out for Delivery', 'Cancelled'];
 
 
   if (isLoading) {
@@ -132,19 +142,29 @@ export default function AdminPage() {
                       ₹{order.totalPrice.toFixed(2)}
                     </TableCell>
                     <TableCell className="text-center">
-                        <Badge variant={order.status === 'Cancelled' ? 'destructive' : 'secondary'}>
+                        <Badge variant={getStatusBadgeVariant(order.status)}>
                           {order.status || 'Active'}
                         </Badge>
                     </TableCell>
                     <TableCell className="text-center">
-                        <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => handleCancelOrder(order.id)}
-                            disabled={order.status === 'Cancelled'}
-                        >
-                            Cancel
-                        </Button>
+                       <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" disabled={order.status === 'Cancelled'}>
+                              Update Status <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {orderStatuses.map(status => (
+                               <DropdownMenuItem 
+                                key={status}
+                                onClick={() => handleUpdateStatus(order.id, status)}
+                                disabled={order.status === status}
+                               >
+                                {status}
+                               </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -158,3 +178,4 @@ export default function AdminPage() {
     </div>
   );
 }
+
