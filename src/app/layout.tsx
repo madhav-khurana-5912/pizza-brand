@@ -7,8 +7,12 @@ import { CartProvider } from '@/components/cart/cart-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'Pizza Brand',
-  description: 'Hot. Fresh. Unforgettable.',
+  title: {
+    default: 'Pizza Brand - Hot. Fresh. Unforgettable.',
+    template: '%s | Pizza Brand',
+  },
+  description: 'Order the best pizzas, burgers, and sides from Pizza Brand. Hot, fresh, and unforgettable food delivered to your doorstep.',
+  keywords: ['pizza', 'food delivery', 'restaurant', 'burgers', 'sides', 'fast food'],
 };
 
 export default function RootLayout({
