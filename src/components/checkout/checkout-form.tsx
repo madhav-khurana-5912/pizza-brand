@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -17,6 +16,10 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useToast } from "@/hooks/use-toast"
 import { useCart } from "../cart/cart-provider"
+import { firestore } from "@/lib/firebase"
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { useAuth } from "@/hooks/use-auth"
+import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -29,7 +32,9 @@ const formSchema = z.object({
 
 export function CheckoutForm() {
   const { toast } = useToast()
-  const { clearCart } = useCart()
+  const { cartItems, totalPrice, clearCart } = useCart()
+  const { user } = useAuth()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,14 +48,39 @@ export function CheckoutForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast({
-      title: "Order Placed!",
-      description: "Thank you for your order. We'll get it to you shortly.",
-    })
-    form.reset()
-    clearCart()
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Authentication Error",
+        description: "You must be logged in to place an order.",
+      })
+      return
+    }
+
+    try {
+      await addDoc(collection(firestore, "orders"), {
+        userId: user.uid,
+        ...values,
+        cartItems,
+        totalPrice,
+        createdAt: serverTimestamp(),
+      })
+      toast({
+        title: "Order Placed!",
+        description: "Thank you for your order. We'll get it to you shortly.",
+      })
+      form.reset()
+      clearCart()
+      router.push('/')
+    } catch (error) {
+      console.error("Error placing order:", error)
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was a problem placing your order. Please try again.",
+      })
+    }
   }
 
   return (
