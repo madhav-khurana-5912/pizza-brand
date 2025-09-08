@@ -24,22 +24,8 @@ export function Hero() {
           <p className="text-lg md:text-xl text-primary-foreground/90 mb-8">
             Discover the best restaurants and stores near you.
           </p>
-          <div className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2 max-w-xl mx-auto">
-            <MapPin className="text-neutral-500 ml-2" />
-            <Input 
-              type="text" 
-              placeholder="Enter your delivery location" 
-              className="border-0 focus-visible:ring-0 text-neutral-800 flex-grow"
-            />
-            <div className="h-6 w-px bg-neutral-200"></div>
-            <Input 
-              type="text" 
-              placeholder="Search for restaurant, item or more" 
-              className="border-0 focus-visible:ring-0 text-neutral-800 flex-grow"
-            />
-            <Button size="icon" className="bg-primary rounded-md">
-              <Search />
-            </Button>
+          <div className="bg-white rounded-lg shadow-lg p-4 max-w-xl mx-auto">
+            <p className="text-neutral-800">Search for your meal</p>
           </div>
         </div>
       </div>
