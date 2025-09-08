@@ -25,7 +25,7 @@ export function Hero() {
             Discover the best restaurants and stores near you.
           </p>
           <div className="bg-white rounded-lg shadow-lg p-4 max-w-xl mx-auto">
-            <p className="text-neutral-800">Search for your meal</p>
+            <p className="text-neutral-800">Search meal</p>
           </div>
         </div>
       </div>
