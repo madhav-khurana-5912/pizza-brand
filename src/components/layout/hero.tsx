@@ -1,11 +1,8 @@
 import Image from 'next/image';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { MapPin, Search } from 'lucide-react';
 
 export function Hero() {
   return (
-    <section className="relative bg-primary text-primary-foreground">
+    <section className="relative bg-primary text-primary-foreground pb-16">
       <div className="absolute inset-0">
         <Image
           src="https://picsum.photos/1600/600"
