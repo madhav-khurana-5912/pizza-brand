@@ -17,7 +17,7 @@ export function WednesdayOffers() {
               <p className="text-2xl font-bold">ON MEDIUM PIZZA</p>
               <div className="flex items-center justify-center gap-2 pt-2">
                 <Ticket className="h-5 w-5" />
-                <span className="font-semibold text-lg">CODE: FSOF</span>
+                <span className="font-semibold text-lg">CODE: BOGOMED</span>
               </div>
             </div>
             <div className="bg-white/10 rounded-lg p-6 space-y-2 border border-white/20">
@@ -25,7 +25,7 @@ export function WednesdayOffers() {
               <p className="text-2xl font-bold">ON LARGE PIZZA</p>
               <div className="flex items-center justify-center gap-2 pt-2">
                 <Ticket className="h-5 w-5" />
-                <span className="font-semibold text-lg">CODE: FSOF</span>
+                <span className="font-semibold text-lg">CODE: BOGOLARGE</span>
               </div>
             </div>
           </div>
