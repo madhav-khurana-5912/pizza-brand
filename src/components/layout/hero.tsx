@@ -1,4 +1,7 @@
 import Image from 'next/image';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Search } from 'lucide-react';
 
 export function Hero() {
   return (
@@ -21,8 +24,18 @@ export function Hero() {
           <p className="text-lg md:text-xl text-primary-foreground/90 mb-8">
             Discover the best restaurants and stores near you.
           </p>
-          <div className="bg-white rounded-lg shadow-lg p-4 max-w-xl mx-auto">
-            <p className="text-neutral-800">Search meal</p>
+          <div className="bg-white rounded-lg shadow-lg p-2 max-w-xl mx-auto">
+            <div className="flex">
+              <Input
+                type="text"
+                placeholder="Search for a meal..."
+                className="flex-grow border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base"
+              />
+              <Button className="bg-[#F2811D] hover:bg-[#F26E22] text-white rounded-md">
+                <Search className="h-5 w-5" />
+                <span className="sr-only">Search</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
