@@ -1,19 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth.uid == 'vaOyXZOlnQciAzaG2Q0E9qRXZTz1';
+    }
+
     match /carts/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth.uid == userId;
     }
 
     match /orders/{orderId} {
-      allow create: if request.auth != null;
-      // Admin can read any individual order
-      allow read: if request.auth != null && request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID';
-    }
-
-    match /orders/{orderId} {
-       // Admin can list all orders
-      allow list: if request.auth != null && request.auth.uid == 'REPLACE_WITH_YOUR_ADMIN_UID';
+      allow create: if request.auth.uid != null;
+      allow read: if isAdmin() || request.auth.uid == resource.data.userId;
+      allow list: if isAdmin();
     }
   }
 }
