@@ -23,11 +23,18 @@ export function CategoryFilter({
   setSelectedCategory,
 }: CategoryFilterProps) {
   
-  // Find a representative image for each category (first item's image)
+  const categoryImageMap: { [key: string]: string } = {
+    "Pizzas": "/pizza.png",
+    "Sandwiches": "/vegsandwhich.png",
+    "Burgers": "/burger.png",
+    "Shakes & Mocktails": "/shakesandmocktails.png",
+    "Breads": "/garlicbread.png",
+    "Pasta": "/pasta.png",
+  };
+
   const categoryImages = categories.map(category => {
     const firstItem = category.items[0];
-    // Assuming you have images in /public folder named after the category
-    const categoryImage = `/${category.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}.png`;
+    const categoryImage = categoryImageMap[category.name] || `/${category.name.toLowerCase().replace(/ & /g, '-').replace(/ /g, '-')}.png`;
     return {
       name: category.name,
       image: categoryImage,
