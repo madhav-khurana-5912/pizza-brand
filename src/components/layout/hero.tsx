@@ -84,12 +84,12 @@ export function Hero() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 text-black">
             {serviceCards.map(card => (
               <Card key={card.title} className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer">
-                <CardContent className="p-4 flex flex-col justify-between h-full">
+                <CardContent className="p-4 flex items-center justify-between h-full">
                   <div>
                     <h3 className="text-lg font-bold">{card.title}</h3>
                     <p className="text-sm text-gray-600">{card.subtitle}</p>
                   </div>
-                  <div className='relative h-24 mt-4'>
+                  <div className='relative h-24 w-32 mt-4'>
                     <Image src={card.image} alt={card.title} fill className="object-contain" data-ai-hint={card.aiHint}/>
                   </div>
                 </CardContent>
