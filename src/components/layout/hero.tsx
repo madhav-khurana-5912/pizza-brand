@@ -14,13 +14,6 @@ export function Hero() {
       aiHint: "food delivery plate",
     },
     {
-      title: "INSTAMART",
-      subtitle: "INSTANT GROCERY",
-      offer: "UPTO 50% OFF",
-      image: "https://picsum.photos/seed/hero-grocery/200/150",
-      aiHint: "grocery basket",
-    },
-    {
       title: "DINEOUT",
       subtitle: "EAT OUT & SAVE MORE",
       offer: "UPTO 50% OFF",
@@ -55,7 +48,7 @@ export function Hero() {
         <div className="max-w-4xl mx-auto">
           <div className='mb-8'>
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              Order food & groceries. Discover
+              Order food. Discover
             </h1>
             <h2 className="text-4xl md:text-5xl font-bold">
                 best restaurants. Swiggy it!
@@ -82,7 +75,7 @@ export function Hero() {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-black">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 text-black">
             {serviceCards.map(card => (
               <Card key={card.title} className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 transform hover:-translate-y-1 cursor-pointer">
                 <CardContent className="p-4 flex flex-col justify-between h-full">
