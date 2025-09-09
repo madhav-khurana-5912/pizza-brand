@@ -1,10 +1,25 @@
+
+"use client";
+
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function Hero() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/menu?search=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+  
   const serviceCards = [
     {
       title: "FOOD DELIVERY",
@@ -54,16 +69,19 @@ export function Hero() {
                 best restaurants. Swiggy it!
             </h2>
           </div>
-          <div className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2">
+          <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2">
             <div className="flex items-center flex-grow">
                  <Search className="h-5 w-5 mx-2 text-gray-500"/>
                 <Input
                     type="text"
                     placeholder="Search for your favorite food..."
                     className="flex-grow border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base text-gray-700"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </div>
-          </div>
+            <Button type="submit" className="bg-[#F2811D] hover:bg-[#F26E22] text-white">Search</Button>
+          </form>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12 text-black">
             {serviceCards.map(card => (

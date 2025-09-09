@@ -8,14 +8,20 @@ export const metadata: Metadata = {
   description: 'Explore our delicious menu of pizzas, burgers, sandwiches, and more.',
 };
 
-export default function MenuPage() {
+interface MenuPageProps {
+  searchParams?: {
+    search?: string;
+  };
+}
+
+export default function MenuPage({ searchParams }: MenuPageProps) {
   return (
     <>
       <div className="overflow-x-hidden">
         <WednesdayOffers />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <MenuDisplay menu={menuData} />
+        <MenuDisplay menu={menuData} searchTerm={searchParams?.search} />
       </div>
     </>
   );
