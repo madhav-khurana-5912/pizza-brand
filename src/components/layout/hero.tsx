@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, ChevronDown } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 
 export function Hero() {
@@ -56,20 +56,10 @@ export function Hero() {
           </div>
           <div className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2">
             <div className="flex items-center flex-grow">
-                <MapPin className="h-5 w-5 mx-2 text-orange-500"/>
-                <Input
-                    type="text"
-                    placeholder="Enter your delivery location"
-                    className="flex-grow border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base text-gray-700"
-                />
-                <ChevronDown className="h-5 w-5 text-gray-500"/>
-            </div>
-            <Separator />
-            <div className="flex items-center flex-grow">
                  <Search className="h-5 w-5 mx-2 text-gray-500"/>
                 <Input
                     type="text"
-                    placeholder="Search for restaurant, item or more"
+                    placeholder="Search for your favorite food..."
                     className="flex-grow border-none focus-visible:ring-0 focus-visible:ring-offset-0 text-base text-gray-700"
                 />
             </div>
@@ -95,9 +85,4 @@ export function Hero() {
       </div>
     </section>
   );
-}
-
-
-function Separator() {
-    return <div className="w-px h-6 bg-gray-200"></div>
 }
