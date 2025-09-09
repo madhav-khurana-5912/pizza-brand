@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { firestore } from "@/lib/firebase";
-import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, writeBatch } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, writeBatch, deleteDoc } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -34,9 +34,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Trash2 } from "lucide-react";
+import { MoreVertical, Trash2 } from "lucide-react";
 
 
 export default function AdminPage() {
@@ -44,6 +48,8 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (!loading && user) {
@@ -84,6 +90,30 @@ export default function AdminPage() {
         title: "Error",
         description: "There was a problem updating the order.",
       });
+    }
+  };
+
+  const handleDeleteOrder = async (orderId: string | null) => {
+    if (!orderId) return;
+
+    setIsLoading(true);
+    try {
+      await deleteDoc(doc(firestore, "orders", orderId));
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+      toast({
+        title: "Order Deleted",
+        description: "The order has been successfully deleted.",
+      });
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was a problem deleting the order.",
+      });
+    } finally {
+      setIsLoading(false);
+      setOrderToDelete(null);
     }
   };
 
@@ -141,106 +171,135 @@ export default function AdminPage() {
   }
   
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-center">Admin - All Orders</h1>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" disabled={orders.length === 0}>
-              <Trash2 className="mr-2 h-4 w-4" />
-              Delete All Orders
-            </Button>
-          </AlertDialogTrigger>
+    <>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-between items-center mb-12">
+          <h1 className="text-4xl font-bold text-center">Admin - All Orders</h1>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" disabled={orders.length === 0}>
+                <Trash2 className="mr-2 h-4 w-4" />
+                Delete All Orders
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete all
+                  orders from the database.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDeleteAllOrders}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+        <Card>
+          <CardContent className="pt-6">
+            {orders.length > 0 ? (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order Date</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead>Items</TableHead>
+                    <TableHead className="text-right">Total</TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Action</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order) => (
+                    <TableRow key={order.id} className={cn(order.status === 'Cancelled' && 'text-muted-foreground bg-muted/50')}>
+                      <TableCell>
+                        {new Date(order.createdAt.seconds * 1000).toLocaleString()}
+                      </TableCell>
+                      <TableCell>
+                          <div>{order.name}</div>
+                          <div>{order.phone}</div>
+                      </TableCell>
+                      <TableCell>{`${order.address}, ${order.city}, ${order.state} ${order.zip}`}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col gap-1">
+                          {order.cartItems.map(item => (
+                              <div key={item.id}>
+                                  {item.name} <Badge variant="secondary">x{item.quantity}</Badge>
+                              </div>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        ₹{order.totalPrice.toFixed(2)}
+                      </TableCell>
+                      <TableCell className="text-center">
+                          <Badge variant={getStatusBadgeVariant(order.status)}>
+                            {order.status || 'Active'}
+                          </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                         <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                               <DropdownMenuSub>
+                                <DropdownMenuSubTrigger>Update Status</DropdownMenuSubTrigger>
+                                  <DropdownMenuSubContent>
+                                    {orderStatuses.map(status => (
+                                      <DropdownMenuItem 
+                                          key={status}
+                                          onClick={() => handleUpdateStatus(order.id, status)}
+                                          disabled={order.status === status}
+                                      >
+                                          {status}
+                                      </DropdownMenuItem>
+                                    ))}
+                                  </DropdownMenuSubContent>
+                              </DropdownMenuSub>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => setOrderToDelete(order.id)} className="text-destructive">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete Order
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <p className="text-center text-muted-foreground py-8">No orders found.</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+       <AlertDialog open={!!orderToDelete} onOpenChange={(open) => !open && setOrderToDelete(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete all
-                orders from the database.
+                This action cannot be undone. This will permanently delete this
+                order from the database.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteAllOrders}>
+              <AlertDialogCancel onClick={() => setOrderToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleDeleteOrder(orderToDelete)} className="bg-destructive hover:bg-destructive/90">
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
-      <Card>
-        <CardContent className="pt-6">
-          {orders.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order Date</TableHead>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Address</TableHead>
-                  <TableHead>Items</TableHead>
-                  <TableHead className="text-right">Total</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-center">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order.id} className={cn(order.status === 'Cancelled' && 'text-muted-foreground bg-muted/50')}>
-                    <TableCell>
-                      {new Date(order.createdAt.seconds * 1000).toLocaleString()}
-                    </TableCell>
-                    <TableCell>
-                        <div>{order.name}</div>
-                        <div>{order.phone}</div>
-                    </TableCell>
-                    <TableCell>{`${order.address}, ${order.city}, ${order.state} ${order.zip}`}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col gap-1">
-                        {order.cartItems.map(item => (
-                            <div key={item.id}>
-                                {item.name} <Badge variant="secondary">x{item.quantity}</Badge>
-                            </div>
-                        ))}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right font-medium">
-                      ₹{order.totalPrice.toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-center">
-                        <Badge variant={getStatusBadgeVariant(order.status)}>
-                          {order.status || 'Active'}
-                        </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                       <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" disabled={order.status === 'Cancelled'}>
-                              Update Status <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            {orderStatuses.map(status => (
-                               <DropdownMenuItem 
-                                key={status}
-                                onClick={() => handleUpdateStatus(order.id, status)}
-                                disabled={order.status === status}
-                               >
-                                {status}
-                               </EUIDropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <p className="text-center text-muted-foreground py-8">No orders found.</p>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 }
-
