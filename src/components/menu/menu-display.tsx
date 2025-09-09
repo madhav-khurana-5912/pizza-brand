@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import type { Menu } from "@/lib/types";
 import { ProductCard } from "./product-card";
 import { CategoryFilter } from "./category-filter";
@@ -13,19 +13,27 @@ interface MenuDisplayProps {
 
 export function MenuDisplay({ menu, searchTerm }: MenuDisplayProps) {
   const [selectedCategory, setSelectedCategory] = useState("Pizzas");
+  
+  useEffect(() => {
+    if (searchTerm) {
+      // If there's a search term, we don't want to be locked into a category.
+      // Or we could try to find which category the search items belong to.
+      // For now, let's just show the results. The category filter will still show its state.
+    }
+  }, [searchTerm]);
 
   const itemsToDisplay = useMemo(() => {
-    let items = selectedCategory === 'All' 
-      ? menu.flatMap(cat => cat.items)
-      : menu.find(cat => cat.name === selectedCategory)?.items || [];
-
+    let items;
+    // If there is a search term, search through all items.
     if (searchTerm) {
-      items = items.filter(item => 
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+        items = menu.flatMap(cat => cat.items).filter(item => 
+            item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            item.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    } else {
+        // Otherwise, just show items from the selected category.
+        items = menu.find(cat => cat.name === selectedCategory)?.items || [];
     }
-
     return items;
   }, [menu, selectedCategory, searchTerm]);
 
