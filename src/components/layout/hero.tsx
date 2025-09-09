@@ -41,10 +41,10 @@ export function Hero() {
         <div className="max-w-4xl mx-auto">
           <div className='mb-8'>
             <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              Order food. Discover
+              Experience the taste of
             </h1>
             <h2 className="text-4xl md:text-5xl font-bold">
-                best restaurants. Swiggy it!
+                Pizza Brand
             </h2>
           </div>
           <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2">
