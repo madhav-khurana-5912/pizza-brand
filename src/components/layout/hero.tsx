@@ -40,12 +40,9 @@ export function Hero() {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 z-20">
         <div className="max-w-4xl mx-auto">
           <div className='mb-8'>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2">
-              Experience the taste of
+            <h1 className="text-4xl md:text-5xl font-bold">
+              Experience the taste of Pizza Brand.
             </h1>
-            <h2 className="text-4xl md:text-5xl font-bold">
-                Pizza Brand
-            </h2>
           </div>
           <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg p-2 flex items-center gap-2">
             <div className="flex items-center flex-grow">
