@@ -37,7 +37,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubTrigger,
-  DropdownMenuSubContent
+  DropdownMenuSubContent,
+  DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Trash2 } from "lucide-react";
@@ -48,7 +49,7 @@ export default function AdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
 
   useEffect(() => {
@@ -93,16 +94,16 @@ export default function AdminPage() {
     }
   };
 
-  const handleDeleteOrder = async (orderId: string | null) => {
-    if (!orderId) return;
+  const handleDeleteOrder = async () => {
+    if (!orderToDelete) return;
 
     setIsLoading(true);
     try {
-      await deleteDoc(doc(firestore, "orders", orderId));
-      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderId));
+      await deleteDoc(doc(firestore, "orders", orderToDelete.id));
+      setOrders(prevOrders => prevOrders.filter(order => order.id !== orderToDelete.id));
       toast({
         title: "Order Deleted",
-        description: "The order has been successfully deleted.",
+        description: `Order #${orderToDelete.id.slice(0,7)} has been successfully deleted.`,
       });
     } catch (error) {
       console.error("Error deleting order:", error);
@@ -249,27 +250,29 @@ export default function AdminPage() {
                                 <MoreVertical className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                               <DropdownMenuSub>
-                                <DropdownMenuSubTrigger>Update Status</DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                              <DropdownMenuContent>
+                                <DropdownMenuSub>
+                                  <DropdownMenuSubTrigger>Update Status</DropdownMenuSubTrigger>
                                   <DropdownMenuSubContent>
-                                    {orderStatuses.map(status => (
-                                      <DropdownMenuItem 
-                                          key={status}
-                                          onClick={() => handleUpdateStatus(order.id, status)}
-                                          disabled={order.status === status}
-                                      >
-                                          {status}
-                                      </DropdownMenuItem>
-                                    ))}
+                                      {orderStatuses.map(status => (
+                                        <DropdownMenuItem 
+                                            key={status}
+                                            onClick={() => handleUpdateStatus(order.id, status)}
+                                            disabled={order.status === status}
+                                        >
+                                            {status}
+                                        </DropdownMenuItem>
+                                      ))}
                                   </DropdownMenuSubContent>
-                              </DropdownMenuSub>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => setOrderToDelete(order.id)} className="text-destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete Order
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
+                                </DropdownMenuSub>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem onClick={() => setOrderToDelete(order)} className="text-destructive focus:text-destructive focus:bg-destructive/10">
+                                  <Trash2 className="mr-2 h-4 w-4" />
+                                  Delete Order
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenuPortal>
                           </DropdownMenu>
                       </TableCell>
                     </TableRow>
@@ -288,13 +291,12 @@ export default function AdminPage() {
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete this
-                order from the database.
+                This action cannot be undone. This will permanently delete order <strong>#{orderToDelete?.id.slice(0,7)}</strong> from the database.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setOrderToDelete(null)}>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={() => handleDeleteOrder(orderToDelete)} className="bg-destructive hover:bg-destructive/90">
+              <AlertDialogAction onClick={handleDeleteOrder} className="bg-destructive hover:bg-destructive/90">
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -303,3 +305,5 @@ export default function AdminPage() {
     </>
   );
 }
+
+    
