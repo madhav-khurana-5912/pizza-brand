@@ -295,7 +295,7 @@ export default function AdminPage() {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => setOrderToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={handleDeleteOrder} className="bg-destructive hover:bg-destructive/90">
                 Continue
               </AlertDialogAction>
@@ -305,5 +305,3 @@ export default function AdminPage() {
     </>
   );
 }
-
-    
