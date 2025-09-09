@@ -89,7 +89,7 @@ export function Hero() {
                     <h3 className="text-lg font-bold">{card.title}</h3>
                     <p className="text-sm text-gray-600">{card.subtitle}</p>
                   </div>
-                  <div className='relative h-32 mt-4'>
+                  <div className='relative h-24 mt-4'>
                     <Image src={card.image} alt={card.title} fill className="object-contain" data-ai-hint={card.aiHint}/>
                   </div>
                 </CardContent>
