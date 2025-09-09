@@ -23,7 +23,7 @@ export function Hero() {
   const serviceCards = [
     {
       title: "FOOD DELIVERY",
-      subtitle: "FROM RESTAURANTS",
+      subtitle: "is available",
       image: "https://picsum.photos/seed/hero-food/200/150",
       aiHint: "food delivery plate",
     },
