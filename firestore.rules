@@ -20,6 +20,8 @@ service cloud.firestore {
       allow read, update: if request.auth.uid == resource.data.userId || isAdmin();
       // Admins can list all orders.
       allow list: if isAdmin();
+      // Admins can delete any order.
+      allow delete: if isAdmin();
     }
   }
 }
