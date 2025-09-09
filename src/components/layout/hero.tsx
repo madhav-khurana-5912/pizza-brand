@@ -28,8 +28,8 @@ export function Hero() {
       aiHint: "food delivery plate",
     },
     {
-      title: "DINEOUT",
-      subtitle: "EAT OUT & SAVE MORE",
+      title: "DINE IN",
+      subtitle: "is available",
       image: "https://picsum.photos/seed/hero-dineout/200/150",
       aiHint: "restaurant dining",
     }
