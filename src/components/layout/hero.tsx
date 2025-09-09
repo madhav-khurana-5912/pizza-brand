@@ -37,26 +37,6 @@ export function Hero() {
 
   return (
     <section className="relative bg-orange-500 text-white overflow-hidden">
-        <div className="absolute top-0 left-0 h-full w-1/4 z-10">
-            <Image 
-                src="https://picsum.photos/seed/veg-bg/400/600"
-                alt="Vegetables"
-                fill
-                className="object-cover opacity-80"
-                data-ai-hint="fresh vegetables"
-            />
-             <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-orange-500/80 to-transparent"></div>
-        </div>
-        <div className="absolute top-0 right-0 h-full w-1/4 z-10">
-             <Image 
-                src="https://picsum.photos/seed/sushi-bg/400/600"
-                alt="Sushi"
-                fill
-                className="object-cover opacity-80"
-                data-ai-hint="sushi platter"
-            />
-            <div className="absolute inset-0 bg-gradient-to-l from-orange-500 via-orange-500/80 to-transparent"></div>
-        </div>
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 z-20">
         <div className="max-w-4xl mx-auto">
           <div className='mb-8'>
