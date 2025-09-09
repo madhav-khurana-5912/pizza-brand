@@ -24,14 +24,12 @@ export function Hero() {
     {
       title: "FOOD DELIVERY",
       subtitle: "FROM RESTAURANTS",
-      offer: "UPTO 50% OFF",
       image: "https://picsum.photos/seed/hero-food/200/150",
       aiHint: "food delivery plate",
     },
     {
       title: "DINEOUT",
       subtitle: "EAT OUT & SAVE MORE",
-      offer: "UPTO 50% OFF",
       image: "https://picsum.photos/seed/hero-dineout/200/150",
       aiHint: "restaurant dining",
     }
@@ -90,7 +88,6 @@ export function Hero() {
                   <div>
                     <h3 className="text-lg font-bold">{card.title}</h3>
                     <p className="text-sm text-gray-600">{card.subtitle}</p>
-                    <p className="text-sm font-semibold text-orange-600 mt-1">{card.offer}</p>
                   </div>
                   <div className='relative h-32 mt-4'>
                     <Image src={card.image} alt={card.title} fill className="object-contain" data-ai-hint={card.aiHint}/>
