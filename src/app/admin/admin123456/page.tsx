@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from "react";
 import { firestore } from "@/lib/firebase";
-import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, Timestamp, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -14,6 +14,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import type { CartItem, Order, OrderStatus } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
@@ -25,7 +36,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Trash2 } from "lucide-react";
 
 
 export default function AdminPage() {
@@ -75,6 +86,35 @@ export default function AdminPage() {
       });
     }
   };
+
+  const handleDeleteAllOrders = async () => {
+    setIsLoading(true);
+    try {
+      const ordersCollection = collection(firestore, "orders");
+      const querySnapshot = await getDocs(ordersCollection);
+      
+      const batch = writeBatch(firestore);
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+      await batch.commit();
+
+      setOrders([]);
+      toast({
+        title: "Success",
+        description: "All orders have been deleted.",
+      });
+    } catch (error) {
+      console.error("Error deleting all orders:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "There was a problem deleting the orders.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   
   const getStatusBadgeVariant = (status?: OrderStatus) => {
     switch (status) {
@@ -102,7 +142,32 @@ export default function AdminPage() {
   
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">Admin - All Orders</h1>
+      <div className="flex justify-between items-center mb-12">
+        <h1 className="text-4xl font-bold text-center">Admin - All Orders</h1>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" disabled={orders.length === 0}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete All Orders
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete all
+                orders from the database.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteAllOrders}>
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
       <Card>
         <CardContent className="pt-6">
           {orders.length > 0 ? (
@@ -161,7 +226,7 @@ export default function AdminPage() {
                                 disabled={order.status === status}
                                >
                                 {status}
-                               </DropdownMenuItem>
+                               </EUIDropdownMenuItem>
                             ))}
                           </DropdownMenuContent>
                         </DropdownMenu>
