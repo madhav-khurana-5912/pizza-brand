@@ -3,10 +3,6 @@ import { menuData } from '@/lib/data';
 import type { Metadata } from 'next';
 import { Hero } from '@/components/layout/hero';
 
-export const metadata: Metadata = {
-  title: 'Home',
-};
-
 export default function Home() {
   return (
     <>
